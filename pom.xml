@@ -10,7 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>minio-spring-boot-starter</module>
-        <module>minio-spring-boot-stater-repository</module>
+        <module>minio-spring-boot-starter-repository</module>
     </modules>
 
     <dependencyManagement>
