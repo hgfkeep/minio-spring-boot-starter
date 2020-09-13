@@ -75,13 +75,6 @@ public class MinioEntityExceptionHandler extends ResponseEntityExceptionHandler{
                 new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
-    @ExceptionHandler(value = {InsufficientDataException.class})
-    protected ResponseEntity<Object> handleObjectPrefixError(RuntimeException ex, WebRequest request) {
-        MinioError error = new MinioError(HttpStatus.BAD_REQUEST, "reading given InputStream gets EOFException before reading given length");
-        return handleExceptionInternal(ex, error,
-                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
-    }
-
     @ExceptionHandler(value = {IllegalArgumentException.class})
     protected ResponseEntity<Object> handleIllegalArgumentError(RuntimeException ex, WebRequest request) {
         MinioError error = new MinioError(HttpStatus.BAD_REQUEST, ex.getMessage());
