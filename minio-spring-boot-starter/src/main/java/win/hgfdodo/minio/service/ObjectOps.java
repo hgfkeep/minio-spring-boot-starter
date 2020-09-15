@@ -41,7 +41,47 @@ public class ObjectOps {
     private Tags tags;
     private ServerSideEncryptionCustomerKey ssec;
 
-    //TODO: set data
+    /**
+     * Set bucket server side encryption to operate
+     *
+     * @param serverSideEncryption
+     * @return
+     */
+    public ObjectOps sse(ServerSideEncryption serverSideEncryption) {
+        this.serverSideEncryption = serverSideEncryption;
+        return this;
+    }
+
+    /**
+     * Set bucket region to operate
+     *
+     * @param region
+     * @return
+     */
+    public ObjectOps region(String region) {
+        this.region = region;
+        return this;
+    }
+
+    public ObjectOps headers(Map<String, String> headers) {
+        this.headers = headers;
+        return this;
+    }
+
+    public ObjectOps extraHeaders(Map<String, String> extraHeaders) {
+        this.extraHeaders = extraHeaders;
+        return this;
+    }
+
+    public ObjectOps extraQueryParams(Map<String, String> extraQueryParams) {
+        this.extraQueryParams = extraQueryParams;
+        return this;
+    }
+
+    public ObjectOps userMetadata(Map<String, String> userMetadata) {
+        this.userMetadata = userMetadata;
+        return this;
+    }
 
     public ObjectOps(MinioConnectionFactory minioConnectionFactory) {
         this.minioConnectionFactory = minioConnectionFactory;

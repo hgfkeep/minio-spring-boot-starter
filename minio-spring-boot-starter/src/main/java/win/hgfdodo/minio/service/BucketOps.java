@@ -63,6 +63,16 @@ public class BucketOps {
         return this;
     }
 
+    public BucketOps extraHeaders(Map<String, String> extraHeaders){
+        this.extraHeaders = extraHeaders;
+        return this;
+    }
+
+    public BucketOps extraQueryParams(Map<String, String> extraQueryParams){
+        this.extraQueryParams = extraQueryParams;
+        return this;
+    }
+
     private MinioClient connection() {
         return minioConnectionFactory.getConnection();
     }
