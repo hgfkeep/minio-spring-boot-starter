@@ -67,7 +67,25 @@ public class MinioTemplate {
     /**
      * Object operations
      */
+    public InputStream getObject(String bucketName, String objectName) throws IOException, InvalidKeyException, InvalidResponseException, InsufficientDataException, ServerException, InternalException, NoSuchAlgorithmException, XmlParserException, InvalidBucketNameException, ErrorResponseException, InvalidResponseException {
+        return minioConnectionFactory.getConnection().getObject(GetObjectArgs.builder().bucket(bucketName).object(objectName).build());
+    }
 
+    public InputStream getObjectVersioned(String bucketName, String objectName, String versionId) throws IOException, InvalidKeyException, InvalidResponseException, InsufficientDataException, ServerException, InternalException, NoSuchAlgorithmException, XmlParserException, InvalidBucketNameException, ErrorResponseException {
+        return minioConnectionFactory.getConnection().getObject(GetObjectArgs.builder().bucket(bucketName).object(objectName).versionId(versionId).build());
+    }
+
+    public InputStream getObjectByPart(String bucketName, String objectName, long length, Long offset) throws IOException, InvalidKeyException, InvalidResponseException, InsufficientDataException, ServerException, InternalException, NoSuchAlgorithmException, XmlParserException, InvalidBucketNameException, ErrorResponseException {
+        return minioConnectionFactory.getConnection().getObject(GetObjectArgs.builder().bucket(bucketName).object(objectName).length(length).offset(offset).build());
+    }
+
+    public InputStream getObjectWithEncryption(String bucketName, String objectName) throws IOException, InvalidKeyException, InvalidResponseException, InsufficientDataException, ServerException, InternalException, NoSuchAlgorithmException, XmlParserException, InvalidBucketNameException, ErrorResponseException {
+        return minioConnectionFactory.getConnection().getObject(GetObjectArgs.builder().bucket(bucketName).object(objectName).build());
+    }
+
+    /**
+     * Object operations
+     */
     public String getObjectURL(String bucketName, String objectName, Integer expires) throws IOException, InvalidKeyException, InvalidResponseException, InsufficientDataException, InvalidExpiresRangeException, ServerException, InternalException, NoSuchAlgorithmException, XmlParserException, InvalidBucketNameException, ErrorResponseException {
         return minioConnectionFactory.getConnection().getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().bucket(bucketName).object(objectName).expiry(expires).build());
     }
@@ -213,7 +231,7 @@ public class MinioTemplate {
      *
      * @param bucketName
      * @param objectNames
-     * @return  list of deleting error object name
+     * @return list of deleting error object name
      */
     public List<String> removeObjects(String bucketName, Collection<String> objectNames) throws IOException, InvalidKeyException, InvalidResponseException, InsufficientDataException, NoSuchAlgorithmException, ServerException, InternalException, XmlParserException, InvalidBucketNameException, ErrorResponseException {
         List<DeleteObject> objects = objectNames.stream().map(DeleteObject::new).collect(Collectors.toList());

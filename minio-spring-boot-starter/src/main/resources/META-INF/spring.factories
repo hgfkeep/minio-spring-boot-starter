@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-win.hgfdodo.minio.config.MinioAutoConfiguration;
+win.hgfdodo.minio.config.MinioAutoConfiguration
