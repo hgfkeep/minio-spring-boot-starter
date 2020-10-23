@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -41,7 +43,7 @@ class MinioTemplateTest {
     @Test
     void getBucket() throws IOException, InvalidResponseException, InvalidKeyException, NoSuchAlgorithmException, ServerException, ErrorResponseException, XmlParserException, InvalidBucketNameException, InsufficientDataException, InternalException {
         Optional<Bucket> bucket = minioTemplate.getBucket(BUCKET_NAME);
-        if(bucket.isPresent()) {
+        if (bucket.isPresent()) {
             Bucket b = bucket.get();
             log.info("bucket info: name={}, createTime={}", b.name(), b.creationDate());
         }
@@ -73,7 +75,9 @@ class MinioTemplateTest {
     }
 
     @Test
-    void saveObject() {
+    void saveObject() throws IOException, InvalidResponseException, InvalidKeyException, NoSuchAlgorithmException, ServerException, InternalException, XmlParserException, InvalidBucketNameException, InsufficientDataException, ErrorResponseException {
+        FileInputStream fileInputStream = new FileInputStream(new File("D:\\Projects\\minio-spring-boot\\minio-spring-boot-starter\\src\\test\\resources\\a.jpg"));
+        minioTemplate.saveKnownSizeObject("test", "2020-09-10/x.jpg", fileInputStream, fileInputStream.available(), "image/jpeg");
     }
 
     @Test

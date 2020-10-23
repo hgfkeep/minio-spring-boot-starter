@@ -11,6 +11,7 @@
     <modules>
         <module>minio-spring-boot-starter</module>
         <module>minio-spring-boot-starter-repository</module>
+        <module>minio-image-processor</module>
     </modules>
 
     <dependencyManagement>

@@ -1,0 +1,7 @@
+spring:
+  minio:
+    url: http://minio.k8s.local
+    accessKey: AKIAIOSFODNN7EXAMPLE
+    secretKey: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+    # not required
+    region:

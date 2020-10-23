@@ -2,6 +2,7 @@ package win.hgfdodo.minio.service;
 
 import io.minio.*;
 import io.minio.errors.*;
+import io.minio.http.Method;
 import io.minio.messages.Bucket;
 import io.minio.messages.DeleteError;
 import io.minio.messages.DeleteObject;
@@ -86,8 +87,19 @@ public class MinioTemplate {
     /**
      * Object operations
      */
+    public String getObjectURL(String bucketName, String objectName) throws IOException, InvalidKeyException, InvalidResponseException, InsufficientDataException, InvalidExpiresRangeException, ServerException, InternalException, NoSuchAlgorithmException, XmlParserException, InvalidBucketNameException, ErrorResponseException {
+        return minioConnectionFactory.getConnection().getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().bucket(bucketName).object(objectName).method(Method.GET).build());
+    }
+
+    /**
+     * Object operations
+     */
     public String getObjectURL(String bucketName, String objectName, Integer expires) throws IOException, InvalidKeyException, InvalidResponseException, InsufficientDataException, InvalidExpiresRangeException, ServerException, InternalException, NoSuchAlgorithmException, XmlParserException, InvalidBucketNameException, ErrorResponseException {
-        return minioConnectionFactory.getConnection().getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().bucket(bucketName).object(objectName).expiry(expires).build());
+        return minioConnectionFactory.getConnection().getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().bucket(bucketName).method(Method.GET).object(objectName).expiry(expires).build());
+    }
+
+    public ObjectWriteResponse composeObject(List<ComposeSource> composeSources) throws IOException, InvalidKeyException, InvalidResponseException, InsufficientDataException, NoSuchAlgorithmException, ServerException, InternalException, XmlParserException, InvalidBucketNameException, ErrorResponseException {
+        return minioConnectionFactory.getConnection().composeObject(ComposeObjectArgs.builder().sources(composeSources).build());
     }
 
     /**
@@ -98,8 +110,8 @@ public class MinioTemplate {
      * @param stream
      * @param contentType
      */
-    public void saveKnownSizeObject(String bucketName, String objectName, InputStream stream, long objectSize, String contentType) throws IOException, InvalidResponseException, InvalidKeyException, NoSuchAlgorithmException, ServerException, ErrorResponseException, XmlParserException, InvalidBucketNameException, InsufficientDataException, InternalException {
-        saveObject(bucketName, objectName, stream, objectSize, -1, contentType);
+    public ObjectWriteResponse saveKnownSizeObject(String bucketName, String objectName, InputStream stream, long objectSize, String contentType) throws IOException, InvalidResponseException, InvalidKeyException, NoSuchAlgorithmException, ServerException, ErrorResponseException, XmlParserException, InvalidBucketNameException, InsufficientDataException, InternalException {
+        return saveObject(bucketName, objectName, stream, objectSize, -1, contentType);
     }
 
     /**
@@ -111,8 +123,8 @@ public class MinioTemplate {
      * @param partSize    object part size, <B>Required</B>
      * @param contentType
      */
-    public void saveUnknownSizeObject(String bucketName, String objectName, InputStream stream, long partSize, String contentType) throws IOException, InvalidResponseException, InvalidKeyException, NoSuchAlgorithmException, ServerException, ErrorResponseException, XmlParserException, InvalidBucketNameException, InsufficientDataException, InternalException {
-        saveObject(bucketName, objectName, stream, -1, partSize, contentType);
+    public ObjectWriteResponse saveUnknownSizeObject(String bucketName, String objectName, InputStream stream, long partSize, String contentType) throws IOException, InvalidResponseException, InvalidKeyException, NoSuchAlgorithmException, ServerException, ErrorResponseException, XmlParserException, InvalidBucketNameException, InsufficientDataException, InternalException {
+        return saveObject(bucketName, objectName, stream, -1, partSize, contentType);
     }
 
     /**
@@ -120,13 +132,12 @@ public class MinioTemplate {
      *
      * @param bucketName
      * @param objectName  folder or directory path relative to bucket root, <B>MUST end with '/'</B>! for example '/path/to/'
-     * @param contentType
      */
-    public void mkdir(String bucketName, String objectName, String contentType) throws IOException, InvalidKeyException, InvalidResponseException, InsufficientDataException, NoSuchAlgorithmException, ServerException, InternalException, XmlParserException, InvalidBucketNameException, ErrorResponseException, MinioBadRequestException {
+    public ObjectWriteResponse mkdir(String bucketName, String objectName) throws IOException, InvalidKeyException, InvalidResponseException, InsufficientDataException, NoSuchAlgorithmException, ServerException, InternalException, XmlParserException, InvalidBucketNameException, ErrorResponseException, MinioBadRequestException {
         if (!objectName.endsWith("/")) {
             throw new MinioBadRequestException("folder or directory object name MUST end with '/'");
         }
-        saveObject(bucketName, objectName, new ByteArrayInputStream(new byte[]{}), 0, -1, null);
+        return saveObject(bucketName, objectName, new ByteArrayInputStream(new byte[]{}), 0, -1, null);
     }
 
     /**
@@ -139,13 +150,14 @@ public class MinioTemplate {
      * @param partSize
      * @param contentType object content type, for example: 'mp4', 'jpg', etc.  can be null if save folder or directory
      */
-    public void saveObject(String bucketName, String objectName, InputStream stream, long objectSize, long partSize, String contentType) throws IOException, InvalidKeyException, InvalidResponseException, InsufficientDataException, NoSuchAlgorithmException, ServerException, InternalException, XmlParserException, InvalidBucketNameException, ErrorResponseException {
+    public ObjectWriteResponse saveObject(String bucketName, String objectName, InputStream stream, long objectSize, long partSize, String contentType) throws IOException, InvalidKeyException, InvalidResponseException, InsufficientDataException, NoSuchAlgorithmException, ServerException, InternalException, XmlParserException, InvalidBucketNameException, ErrorResponseException {
         PutObjectArgs putObjectArgs = PutObjectArgs.builder()
                 .bucket(bucketName)
                 .object(objectName)
                 .stream(stream, objectSize, partSize)
+                .contentType(contentType)
                 .build();
-        minioConnectionFactory.getConnection().putObject(putObjectArgs);
+        return minioConnectionFactory.getConnection().putObject(putObjectArgs);
     }
 
     /**
@@ -243,4 +255,5 @@ public class MinioTemplate {
         }
         return errorDeleteObjects;
     }
+
 }
