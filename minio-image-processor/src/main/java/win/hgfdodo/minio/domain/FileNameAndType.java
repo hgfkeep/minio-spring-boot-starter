@@ -64,6 +64,10 @@ public class FileNameAndType {
         return this.originObjectName.replace(this.filename + "." + this.type, this.filename + "-scaled." + this.type);
     }
 
+    public String getScaledFileName(String outputType) {
+        return this.originObjectName.replace(this.filename + "." + this.type, this.filename + "-scaled." + outputType);
+    }
+
     public String getImageContentType() {
         switch (type) {
             case "png":

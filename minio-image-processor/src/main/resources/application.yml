@@ -1,7 +1,10 @@
 spring:
   minio:
-    url: http://minio.k8s.local
-    accessKey: AKIAIOSFODNN7EXAMPLE
-    secretKey: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+#    url: http://minio.k8s.local
+#    accessKey: AKIAIOSFODNN7EXAMPLE
+#    secretKey: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+    url: https://play.min.io
+    accessKey: Q3AM3UQ867SPQQA43P2F
+    secretKey: zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG
     # not required
     region:

@@ -131,7 +131,7 @@ public class MinioTemplate {
      * create folder or directory
      *
      * @param bucketName
-     * @param objectName  folder or directory path relative to bucket root, <B>MUST end with '/'</B>! for example '/path/to/'
+     * @param objectName folder or directory path relative to bucket root, <B>MUST end with '/'</B>! for example '/path/to/'
      */
     public ObjectWriteResponse mkdir(String bucketName, String objectName) throws IOException, InvalidKeyException, InvalidResponseException, InsufficientDataException, NoSuchAlgorithmException, ServerException, InternalException, XmlParserException, InvalidBucketNameException, ErrorResponseException, MinioBadRequestException {
         if (!objectName.endsWith("/")) {

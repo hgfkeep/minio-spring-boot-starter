@@ -82,11 +82,11 @@ public class MinioEntityExceptionHandler extends ResponseEntityExceptionHandler{
                 new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
-    @ExceptionHandler(value = {Exception.class})
-    protected ResponseEntity<Object> handleError(RuntimeException ex, WebRequest request) {
-        MinioError error = new MinioError(HttpStatus.BAD_REQUEST, "An unexpected internal error occured while processing the request");
-        ex.printStackTrace();
-        return handleExceptionInternal(ex, error,
-                new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
-    }
+//    @ExceptionHandler(value = {Exception.class})
+//    protected ResponseEntity<Object> handleError(RuntimeException ex, WebRequest request) {
+//        MinioError error = new MinioError(HttpStatus.BAD_REQUEST, "An unexpected internal error occured while processing the request");
+//        ex.printStackTrace();
+//        return handleExceptionInternal(ex, error,
+//                new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+//    }
 }

@@ -102,15 +102,9 @@ public class ImageService {
     public String resizeImageAndSave(String bucketName, String objectName, int maxSize, int width, int hight) throws IOException, InvalidResponseException, InvalidKeyException, NoSuchAlgorithmException, ServerException, InternalException, XmlParserException, InvalidBucketNameException, InsufficientDataException, ErrorResponseException {
         log.debug("Request to resize and save image: {}:://{}", bucketName, objectName);
         FileNameAndType fileNameAndType = new FileNameAndType(objectName);
-        ObjectStat objectStat = minioTemplate.getObjectInfo(bucketName, objectName);
-        float len = (float) objectStat.length();
-        float quality = maxSize / len;
-        if (quality > 1.0F) {
-            quality = 1.0F;
-        }
         InputStream inputStream = resizeImage(bucketName, objectName, maxSize, width, hight);
         ObjectWriteResponse response = minioTemplate.saveKnownSizeObject(bucketName, fileNameAndType.getScaledFileName(), inputStream, inputStream.available(), fileNameAndType.getImageContentType());
-        System.out.println(response);
+        log.trace("save new object {}://{}, res: {}", bucketName, fileNameAndType.getScaledFileName(), response);
         return fileNameAndType.getScaledFileName();
     }
 
@@ -127,8 +121,10 @@ public class ImageService {
         log.debug("Request to resize and save image: {}:://{}, outputType={}", bucketName, objectName, outputType);
         FileNameAndType fileNameAndType = new FileNameAndType(objectName);
         InputStream inputStream = resizeImage(bucketName, objectName, outputType, maxSize, width, hight);
-        minioTemplate.saveKnownSizeObject(bucketName, fileNameAndType.getScaledFileName(), inputStream, inputStream.available(), fileNameAndType.getImageContentType());
-        return fileNameAndType.getScaledFileName();
+        String finalObjectName = fileNameAndType.getScaledFileName(outputType);
+        ObjectWriteResponse response = minioTemplate.saveKnownSizeObject(bucketName, finalObjectName, inputStream, inputStream.available(), fileNameAndType.getImageContentType());
+        log.trace("save new object {}://{}, res: {}", bucketName, fileNameAndType.getScaledFileName(), response);
+        return finalObjectName;
     }
 
     public String getPresignedScaleImage(String bucketName, String objectName, int maxSize, int width, int hight) throws IOException, InvalidResponseException, InvalidKeyException, NoSuchAlgorithmException, ServerException, ErrorResponseException, XmlParserException, InvalidBucketNameException, InsufficientDataException, InternalException, InvalidExpiresRangeException {
